@@ -31,7 +31,7 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(status).body(new ErrorDTO(status.value(), ex.getMessage()));
     }
 
-     @ExceptionHandler(EmailAlreadyInUse.class)
+     @ExceptionHandler(BadCredentialsException.class)
     public ResponseEntity<ErrorDTO> handleInvalidCredentials(BadCredentialsException ex) {
         HttpStatus status = HttpStatus.UNAUTHORIZED;
         return ResponseEntity.status(status).body(new ErrorDTO(status.value(), ex.getMessage()));
