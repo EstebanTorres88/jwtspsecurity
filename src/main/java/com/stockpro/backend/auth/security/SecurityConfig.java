@@ -10,6 +10,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import com.stockpro.backend.auth.AuthEntryPoint;
 import com.stockpro.backend.auth.AuthFIlter;
 
 import lombok.RequiredArgsConstructor;
@@ -21,7 +22,7 @@ public class SecurityConfig {
 
     private final AuthFIlter authFIlter;
     private final AuthenticationProvider authenticationProvider;
-
+    private final AuthEntryPoint authEntryPoint;
 
     @Bean 
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
@@ -32,6 +33,7 @@ public class SecurityConfig {
         )
         .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
         .authenticationProvider(authenticationProvider)
+        .exceptionHandling(exception -> exception.authenticationEntryPoint(authEntryPoint))
         .addFilterBefore(authFIlter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
