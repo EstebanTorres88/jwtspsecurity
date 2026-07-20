@@ -8,12 +8,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import com.stockpro.backend.exceptions.dtos.ErrorDTO;
 import com.stockpro.backend.exceptions.dtos.ValidationErrorDTO;
 import com.stockpro.backend.exceptions.userExceptions.EmailAlreadyInUse;
 import com.stockpro.backend.exceptions.userExceptions.UserNotFoundException;
 
+
+@RestControllerAdvice
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(UserNotFoundException.class)
@@ -37,7 +40,7 @@ public class GlobalExceptionHandler {
         for (FieldError fieldError : ex.getBindingResult().getFieldErrors()) {
             errors.put(fieldError.getField(), fieldError.getDefaultMessage());
         }
-        
+
         HttpStatus status = HttpStatus.BAD_REQUEST;
         return ResponseEntity.status(status)
                 .body(new ValidationErrorDTO(status.value(), "Validation failed", errors));
