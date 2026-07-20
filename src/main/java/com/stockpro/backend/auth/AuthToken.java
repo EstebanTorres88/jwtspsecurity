@@ -1,4 +1,4 @@
-package com.stockpro.backend.auth.security;
+package com.stockpro.backend.auth;
 
 import java.util.Collection;
 

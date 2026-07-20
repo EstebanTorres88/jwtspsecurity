@@ -1,4 +1,4 @@
-package com.stockpro.backend.auth.security;
+package com.stockpro.backend.auth;
 
 import java.util.Date;
 import java.util.List;
@@ -18,7 +18,7 @@ import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 
 @Service
-public class TokenService {
+public class TokenService implements ITokenService{
 
     @Value("${jwt.secret}")
     private String secretKey;
@@ -26,6 +26,7 @@ public class TokenService {
     @Value("${jwt.expiration}")
     private long jwtExpiration;
 
+    @Override
     public String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
         return Jwts.builder()
                 .claims(extraClaims)
@@ -42,20 +43,28 @@ public class TokenService {
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
+
+    @Override
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
     }
 
+
+    @Override
     public UUID extractResourceId(String token){
         String resourceId = extractClaim(token, claims -> claims.get("resourceId", String.class));
         return UUID.fromString(resourceId);
     }
 
-    public List<String> extractRoles(String token){
+
+    @Override
+    public List<String> extractUserRoles(String token){
         return extractClaim(token, claims -> claims.get("roles", List.class));
         
     }
 
+
+    @Override
     public boolean isTokenValid(String token, UserDetails userDetails) {
         final String username = extractUsername(token);
         return (username.equals(userDetails.getUsername())) && !isTokenExpired(token);
