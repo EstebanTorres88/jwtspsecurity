@@ -1,4 +1,4 @@
-package com.stockpro.backend.auth;
+package com.stockpro.backend.auth.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
