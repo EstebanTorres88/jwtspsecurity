@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -27,6 +28,12 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(EmailAlreadyInUse.class)
     public ResponseEntity<ErrorDTO> handleEmailAlreadyInUse(EmailAlreadyInUse ex) {
         HttpStatus status = HttpStatus.CONFLICT;
+        return ResponseEntity.status(status).body(new ErrorDTO(status.value(), ex.getMessage()));
+    }
+
+     @ExceptionHandler(EmailAlreadyInUse.class)
+    public ResponseEntity<ErrorDTO> handleInvalidCredentials(BadCredentialsException ex) {
+        HttpStatus status = HttpStatus.UNAUTHORIZED;
         return ResponseEntity.status(status).body(new ErrorDTO(status.value(), ex.getMessage()));
     }
 
