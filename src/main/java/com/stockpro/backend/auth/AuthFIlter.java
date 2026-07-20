@@ -10,6 +10,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.stockpro.backend.user.UserService;
 
+import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -29,34 +30,37 @@ public class AuthFIlter extends OncePerRequestFilter {
         String path = request.getServletPath();
         return path.startsWith(publicEndpoint);
     }
-    
+
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+            throws ServletException, IOException {
         final String bearerPrefix = "Bearer ";
         final String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
         final String token;
         final String userEmail;
-
 
         if (authHeader == null || !authHeader.startsWith(bearerPrefix)) {
             filterChain.doFilter(request, response);
             return;
         }
 
+        try {
+            token = authHeader.substring(bearerPrefix.length());
+            userEmail = tokenService.extractUsername(token);
 
-        token = authHeader.substring(bearerPrefix.length());
-        userEmail = tokenService.extractUsername(token);
+            if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+                UserDetails user = userService.loadUserByUsername(userEmail);
 
+                if (tokenService.isTokenValid(token, user)) {
+                    AuthToken authToken = new AuthToken(user, token, user.getAuthorities());
+                    SecurityContextHolder.getContext().setAuthentication(authToken);
+                }
 
-        if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            UserDetails user = userService.loadUserByUsername(userEmail);
-
-            if (tokenService.isTokenValid(token, user)) {
-                AuthToken authToken = new AuthToken(user, token, user.getAuthorities());
-                  SecurityContextHolder.getContext().setAuthentication(authToken);
             }
 
-          
+        } catch (JwtException ex) {
+            SecurityContextHolder.clearContext();
+            request.setAttribute("jwt exception", ex.getMessage());
         }
 
         filterChain.doFilter(request, response);

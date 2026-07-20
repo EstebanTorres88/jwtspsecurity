@@ -1,5 +1,6 @@
 package com.stockpro.backend.exceptions;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -31,7 +32,7 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(status).body(new ErrorDTO(status.value(), ex.getMessage()));
     }
 
-     @ExceptionHandler(BadCredentialsException.class)
+    @ExceptionHandler(BadCredentialsException.class)
     public ResponseEntity<ErrorDTO> handleInvalidCredentials(BadCredentialsException ex) {
         HttpStatus status = HttpStatus.UNAUTHORIZED;
         return ResponseEntity.status(status).body(new ErrorDTO(status.value(), ex.getMessage()));
@@ -49,6 +50,14 @@ public class GlobalExceptionHandler {
         HttpStatus status = HttpStatus.BAD_REQUEST;
         return ResponseEntity.status(status)
                 .body(new ValidationErrorDTO(status.value(), "Validation failed", errors));
+    }
+
+    @ExceptionHandler(IOException.class)
+    public ResponseEntity<ErrorDTO> handleInvalidToken(IOException ex) {
+
+        HttpStatus status = HttpStatus.BAD_REQUEST;
+        return ResponseEntity.status(status)
+                .body(new ErrorDTO(status.value(), "Token Validation failed"));
     }
 
 }
