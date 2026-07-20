@@ -15,7 +15,6 @@ import com.stockpro.backend.exceptions.dtos.ValidationErrorDTO;
 import com.stockpro.backend.exceptions.userExceptions.EmailAlreadyInUse;
 import com.stockpro.backend.exceptions.userExceptions.UserNotFoundException;
 
-
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
@@ -31,11 +30,10 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(status).body(new ErrorDTO(status.value(), ex.getMessage()));
     }
 
-
-        @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ValidationErrorDTO> handleValidation(MethodArgumentNotValidException ex) {
 
-        Map<String,String> errors = new HashMap<String,String>();
+        Map<String, String> errors = new HashMap<String, String>();
 
         for (FieldError fieldError : ex.getBindingResult().getFieldErrors()) {
             errors.put(fieldError.getField(), fieldError.getDefaultMessage());
