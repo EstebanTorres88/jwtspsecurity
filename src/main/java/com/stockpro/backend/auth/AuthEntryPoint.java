@@ -22,7 +22,7 @@ public class AuthEntryPoint implements AuthenticationEntryPoint {
 
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
-        String detail = (String) request.getAttribute("exception");
+        String detail = (String) request.getAttribute("jwtException");
         String message = detail != null ? detail : "JWT is missing";
         
         HttpStatus status = HttpStatus.UNAUTHORIZED;
