@@ -22,6 +22,13 @@ public class AuthFIlter extends OncePerRequestFilter {
 
     private final TokenService tokenService;
     private final UserService userService;
+
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+        String publicEndpoint = "/auth";
+        String path = request.getServletPath();
+        return path.startsWith(publicEndpoint);
+    }
     
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
