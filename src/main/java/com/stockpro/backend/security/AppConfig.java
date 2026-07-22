@@ -43,11 +43,6 @@ public class AppConfig {
 
     }
 
-    @Bean
-    public TokenProperties tokenProperties(){
-        return new TokenProperties();
-    }
-
 
  
 }
