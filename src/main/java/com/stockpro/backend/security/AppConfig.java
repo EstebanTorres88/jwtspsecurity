@@ -1,5 +1,6 @@
 package com.stockpro.backend.security;
 
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -9,11 +10,13 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import com.stockpro.backend.jwt.TokenProperties;
 import com.stockpro.backend.user.UserService;
 
 import lombok.RequiredArgsConstructor;
 
 @Configuration
+@EnableConfigurationProperties(TokenProperties.class)
 @RequiredArgsConstructor
 public class AppConfig {
     
@@ -38,6 +41,11 @@ public class AppConfig {
         return authenticationConfiguration.getAuthenticationManager();
 
 
+    }
+
+    @Bean
+    public TokenProperties tokenProperties(){
+        return new TokenProperties();
     }
 
 
