@@ -1,6 +1,5 @@
-package com.stockpro.backend.auth;
+package com.stockpro.backend.jwt;
 
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -12,7 +11,6 @@ public interface ITokenService {
     public String generateToken(Map<String, Object> extraClaims, UserDetails userDetails);
     public String extractUsername(String token);
     public UUID extractResourceId(String token);
-    public List<String> extractUserRoles(String token);
     public boolean isTokenValid(String token, UserDetails userDetails);
     
 }
