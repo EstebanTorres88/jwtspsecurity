@@ -8,6 +8,7 @@ import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
 
 import com.stockpro.backend.exceptions.dtos.ErrorDTO;
+import com.stockpro.backend.security.SecurityConstants;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -22,11 +23,11 @@ public class AuthEntryPoint implements AuthenticationEntryPoint {
 
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
-        String detail = (String) request.getAttribute("jwtException");
-        String message = detail != null ? detail : "JWT is missing";
+        String detail = (String) request.getAttribute(SecurityConstants.JWT_EXCEPTION);
+        String errorMessage = detail != null ? detail : "JWT is missing";
         
         HttpStatus status = HttpStatus.UNAUTHORIZED;
-        ErrorDTO errorDTO = new ErrorDTO(status.value(), message);
+        ErrorDTO errorDTO = new ErrorDTO(status.value(), errorMessage);
 
         response.setStatus(status.value());
         response.setContentType("application/json");

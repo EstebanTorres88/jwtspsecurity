@@ -14,8 +14,8 @@ import org.springframework.stereotype.Service;
 import com.stockpro.backend.auth.dtos.AuthResponseDTO;
 import com.stockpro.backend.auth.dtos.LoginRequestDTO;
 import com.stockpro.backend.auth.dtos.RegisterRequestDTO;
-import com.stockpro.backend.auth.mappers.AuthMapper;
 import com.stockpro.backend.exceptions.userExceptions.EmailAlreadyInUse;
+import com.stockpro.backend.jwt.TokenService;
 import com.stockpro.backend.user.User;
 import com.stockpro.backend.user.UserRepository;
 

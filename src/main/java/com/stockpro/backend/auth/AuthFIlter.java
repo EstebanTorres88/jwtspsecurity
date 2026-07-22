@@ -8,6 +8,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import com.stockpro.backend.jwt.TokenService;
+import com.stockpro.backend.security.SecurityConstants;
 import com.stockpro.backend.user.UserService;
 
 import io.jsonwebtoken.JwtException;
@@ -34,18 +36,17 @@ public class AuthFIlter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
-        final String bearerPrefix = "Bearer ";
         final String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
         final String token;
         final String userEmail;
 
-        if (authHeader == null || !authHeader.startsWith(bearerPrefix)) {
+        if (authHeader == null || !authHeader.startsWith(SecurityConstants.BEARER_PREFIX)) {
             filterChain.doFilter(request, response);
             return;
         }
 
         try {
-            token = authHeader.substring(bearerPrefix.length());
+            token = authHeader.substring(SecurityConstants.BEARER_PREFIX.length());
             userEmail = tokenService.extractUsername(token);
 
             if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
@@ -60,7 +61,7 @@ public class AuthFIlter extends OncePerRequestFilter {
 
         } catch (JwtException ex) {
             SecurityContextHolder.clearContext();
-            request.setAttribute("jwtException", ex.getMessage());
+            request.setAttribute(SecurityConstants.JWT_EXCEPTION, ex.getMessage());
         }
 
         filterChain.doFilter(request, response);

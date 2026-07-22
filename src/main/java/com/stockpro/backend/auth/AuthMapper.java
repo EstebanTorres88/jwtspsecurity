@@ -1,4 +1,4 @@
-package com.stockpro.backend.auth.mappers;
+package com.stockpro.backend.auth;
 
 import org.mapstruct.Mapper;
 
